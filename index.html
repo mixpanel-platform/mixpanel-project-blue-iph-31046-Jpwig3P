@@ -30,8 +30,6 @@
       <div id="mpselect" style="float: right;"></div><br/><br/><br/>
       <div style="clear: both;"></div>
       <div id="graph"></div>
-      <div id="graphTwo"></div>
-      <div id="graphThree"></div>
 
     </div>
     <div id="table"></div>
@@ -118,15 +116,8 @@
           $("#by").show();
           runQuery();
         });
-        eventSelectTwo.on('change', function(e, eventNameTwo) {
-          propSelectTwo.MPPropertySelect('setEvent', eventNameTwo);
-          $("#byTwo").show();
-          runQuery();
-        });
         propSelect.on('change', runQuery);
-        propSelectTwo.on('change', runQuery);
         dateSelect.on('change', runQuery);
-        dateSelectTwo.on('change', runQuery);
         typeSelect.on('change', runQuery);
       });
     </script>
