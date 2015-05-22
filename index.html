@@ -8,43 +8,127 @@
   </head>
   <body class="mixpanel-platform-body">
     <div class="mixpanel-platform-section">
+      <div class="titles">
+        <h1 style="font-size: 18px; color: rgb(95,105,131)">Multi-Segmentation Report by two events</h1><br/>
+      </div><br/>
+      
       <div id="eventSelect" style="float: left;"></div>
       <div id="by" class="mixpanel-platform-label" style="margin-left: 10px; display: none;">by</div>
       <div id="propSelect" style="float: left;"></div>
-      <div id="dateSelect" style="float: right;"></div>
+      <div id="dateSelect" style="float: right;"></div><br/><br/>
+      <div class="instructions">
+        <p style="font-size: 13px; color: rgb(95,105,131)">You may enter the property selector for Event. For example: ("San Francisco" in properties["$city"]) </p>
+      </div>
+      <form id="property" style="margin-bottom: 15px; height: 31px">
+        <input type="text" autofocus placeholder="Property Selector for Event A" name="property-name-field" value="" style="color: rgb(95,105,131); height: 30px; width: 500px; padding: 0 4px; font-size: 12px; border: 1px solid rgb(201,209,219)">
+        <input type="submit" name="submit" value="Submit" style="font-weight: bold; color: rgb(95,105,131); font-size: 12px; height: 31px; padding: 0 10px; margin-left: 10px; border: 1px solid rgb(201,209,219); background-color: rgb(242,244,246)">
+      </form>
+      <div class="confirmation">
+        <p class="confirm-text" style="color: rgb(95,105,131); font-size: 15px"></p>
+      </div><br/><br/>
+      
+      <div id="mpselect" style="float: right;"></div><br/><br/><br/>
       <div style="clear: both;"></div>
       <div id="graph"></div>
+      <div id="graphTwo"></div>
+      <div id="graphThree"></div>
+
     </div>
     <div id="table"></div>
     <script>
-      var eventSelect = $('#eventSelect').MPEventSelect();
-      var propSelect  = $('#propSelect').MPPropertySelect();
-      var dateSelect  = $('#dateSelect').MPDatepicker();
-      var eventGraph  = $('#graph').MPChart({chartType: 'bar'});
-      var eventTable  = $('#table').MPTable({
-        showPercentages: true,
-        firstColHeader: 'Event'
-      });
+      MP.api.ready(function() {
+        
+        var options = {
+          items: [
+            {label: 'Total', value: 'general'},
+            {label: 'Unique', value: 'unique'},
+            {label: 'Average', value: 'average'}
+            ]
+        };
 
-      var runQuery = function() {
-        var eventName = eventSelect.MPEventSelect('value'),
-            propName  = propSelect.MPPropertySelect('value'),
-            dateRange = dateSelect.MPDatepicker('value');
-
-        if (eventName) {
-          MP.api.segment(eventName, propName, dateRange).done(function(results) {
-            eventGraph.MPChart('setData', results);
-            eventTable.MPTable('setData', results);
-          });
+        var eventSelect = $('#eventSelect').MPEventSelect();
+        var propSelect  = $('#propSelect').MPPropertySelect();
+        var propValue = '';
+        var dateSelect  = $('#dateSelect').MPDatepicker();
+        var typeSelect  = $('#mpselect').MPSelect(options);
+        var eventGraph  = $('#graph').MPChart({chartType: 'bar'});
+        var eventTable  = $('#table').MPTable({
+          showPercentages: true,
+        });
+        $('#property').submit(function(e) {
+          e.preventDefault();
+          propValue = $('#property input:first').val();
+          $('.confirm-text').html(
+              "Property Selector for Event A: <strong>" + propValue + 
+              "</strong><br>")
+            .css("color", "rgb(95,105,131)");
+          runQuery();
+        });
+        
+        
+        
+        
+        //convenience method for grabbing that datepicker value
+        getDates = function(dateSelector) {
+          return dateSelector.MPDatepicker('value')
         }
-      };
-      eventSelect.on('change', function(e, eventName) {
-        propSelect.MPPropertySelect('setEvent', eventName);
-        $("#by").show();
-        runQuery();
+
+        //find interval for bar chart 'interval' param
+        getInterval = function(dates) {
+          intervalDays = Math.ceil((dates.to - dates.from) / (24 * 60 * 60 * 1000)) + 1
+          return intervalDays
+        }
+
+        var runQuery = function() {
+          //obtain event, property, date range and type values
+          var eventName = eventSelect.MPEventSelect('value'),
+              propName  = propSelect.MPPropertySelect('value'),
+              dateRange = dateSelect.MPDatepicker('value'),
+              typeName  = typeSelect.MPSelect('value');
+              
+          //set parameters for segmentation API
+          var datesOne = getDates(dateSelect);
+          var eventOne_params = $.extend({}, datesOne, {
+              'type': typeName,
+              'where': propValue
+            });
+            
+          
+              
+          if (eventName && propName && typeName) {
+            MP.api.segment(eventName, propName, eventOne_params).done(function(resultOne) {
+              totalData = {};
+              var queryOne = resultOne.values();
+              _.each(_.keys(queryOne), function(properties){
+                  var dateData = queryOne[properties];
+                  totalData['A - ' + eventName + ': ' + properties] = dateData;
+                });
+                  
+                
+                eventGraph.MPChart('setData', totalData);
+                eventTable.MPTable('setData', totalData);
+              });
+            });
+          };
+        };
+        
+        //actions when dropdowns change
+        eventSelect.on('change', function(e, eventName) {
+          propSelect.MPPropertySelect('setEvent', eventName);
+          $("#by").show();
+          runQuery();
+        });
+        eventSelectTwo.on('change', function(e, eventNameTwo) {
+          propSelectTwo.MPPropertySelect('setEvent', eventNameTwo);
+          $("#byTwo").show();
+          runQuery();
+        });
+        propSelect.on('change', runQuery);
+        propSelectTwo.on('change', runQuery);
+        dateSelect.on('change', runQuery);
+        dateSelectTwo.on('change', runQuery);
+        typeSelect.on('change', runQuery);
       });
-      propSelect.on('change', runQuery);
-      dateSelect.on('change', runQuery);
     </script>
   </body>
 </html>
