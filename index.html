@@ -99,18 +99,20 @@
               
               eventGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
-              
-              $('#file').submit(function(e) {
-                if(output == '') {
-                  return;
-                }
-                fileName = $('#file input:first').val();
-                JSONToCSVConvertor(output, fileName);
-              });
-              
-                    
+              runExport(output);
             });
           }; 
+        };
+        
+        function runQuery(results) {
+          $('#file').submit(function(e) {
+            var data = results;
+            if(data == '') {
+              return;
+            }
+            fileName = $('#file input:first').val();
+            JSONToCSVConvertor(data, fileName);
+          });
         };
         
         function JSONToCSVConvertor(JSONData, ReportTitle) {
