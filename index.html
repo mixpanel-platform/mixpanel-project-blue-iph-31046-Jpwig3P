@@ -120,15 +120,6 @@
           var data = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
           var CSV = ''
           
-          //Create list of profiles
-          var property_list = [];
-          for (i = 0; i < JSONData.length; i++) {
-            _.each(_.keys(data[i]), function(propertyIndex){
-              var propertyData = data[i][propertyIndex];
-              property_list.push(propertyData)
-            });
-          };
-          
           //Write the header
           var row = ''
           row += 'Property, Counts,'
