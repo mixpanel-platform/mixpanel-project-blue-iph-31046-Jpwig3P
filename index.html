@@ -70,28 +70,24 @@
             
             MP.api.segment(eventName, propName, params).done(function(results){
               var output = {}
-              //var query = results["data"]["values"]
+              var query = results.values();
               
-              /*_.each(_.keys(query), function(levels){
-                var level = query[levels]
+              _.each(_.keys(query), function(properties){
+                if (!output[properties]) {
+                  output[properties] = {}
+                }
+                var property = level[properties]
+                var sum = 0;
                 
-                _.each(_.keys(level), function(properties){
-                  if (!output[properties]) {
-                    output[properties] = {}
-                  }
-                  var property = level[properties]
-                  var sum = 0;
-                
-                  _.each(_.keys(property), function(dates){
-                    sum = sum + property[dates]
-                  });
-                  
-                  output[properties][levels] = sum;
-                  
+                _.each(_.keys(property), function(dates){
+                  sum = sum + property[dates]
                 });
-              });*/
-              
-              console.log(results.values())
+                  
+                output[properties][levels] = sum;
+                  
+              });
+            
+              console.log(output)
               
               eventGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
