@@ -14,7 +14,6 @@
       <div id="mpselect" style="float: left;"></div><br/><br/><br/>
       <div style="clear: both;"></div>
       <div id="graph"></div>
-      <div id="mpchart"></div>
     </div>
     <div id="table"></div>
     <script>
@@ -63,21 +62,17 @@
               
           
           if (eventName && propName) {
-            var endpoint = '/api/2.0/segmentation/multiseg';
             var dates = getDates();
             var params =  $.extend({}, dates, {
               'type': typeName,
-              'inner': 'properties[\"' + propName + '\"]',
-              'outer': 'properties["Current Level"]',
-              'event': eventName,
               'interval': getInterval(dates)
             });
             
-            MP.api.query(endpoint, params).done(function(results) {
+            MP.api.segment(eventName, propName, params).done(function(results){
               var output = {}
-              var query = results["data"]["values"]
+              //var query = results["data"]["values"]
               
-              _.each(_.keys(query), function(levels){
+              /*_.each(_.keys(query), function(levels){
                 var level = query[levels]
                 
                 _.each(_.keys(level), function(properties){
@@ -94,20 +89,15 @@
                   output[properties][levels] = sum;
                   
                 });
-              });
+              });*/
               
-              console.log(output)
+              console.log(results)
               
               eventStackedGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
               
             });
-          } /*else if (eventName) {
-            MP.api.segment(eventName, 'PlayerCurrentLevel', dateRange).done(function(results) {
-              eventGraph.MPChart('setData', results);
-              eventTable.MPTable('setData', results);
-            });
-          }*/
+          } 
         };
         
         eventSelect.on('change', function(e, eventName) {
