@@ -43,7 +43,6 @@
           firstColHeader: 'Property',
           limit: 200
         });
-
         
         //convenience method for grabbing that datepicker value
         getDates = function() {
@@ -99,22 +98,12 @@
               
               eventGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
-              
-              $('#file').submit(function(e) {
-                if(output == '') {
-                  break;
-                } else {
-                  fileName = $('#file input:first').val();
-                  JSONToCSVConvertor(output, fileName);
-                };
-              });
-              
-              //runExport(output);
+              runExport(output);
             });
           }; 
         };
         
-        /*function runExport(results) {
+        function runExport(results) {
           $('#file').submit(function(e) {
             if(results == '') {
               return;
@@ -122,7 +111,7 @@
             fileName = $('#file input:first').val();
             JSONToCSVConvertor(results, fileName);
           });
-        };*/
+        };
         
         function JSONToCSVConvertor(JSONData, ReportTitle) {
           //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
@@ -141,7 +130,8 @@
             
           //Generate a file name
           var fileName = ReportTitle.replace(/ /g,"_");   
-
+          console.log("yes")
+      
           //Initialize file format you want csv or xls
           var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
       
