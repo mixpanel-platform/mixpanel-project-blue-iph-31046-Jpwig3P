@@ -121,15 +121,12 @@
           var CSV = ''
           
           //Write the header
-          var row = ''
-          row += 'Property, Counts,'
-          CSV += row + '\r\n';
+          CSV += 'Property, Counts,' + '\r\n';
           
           //Write the data
           _.each(_.keys(JSONData), function(propertyName) {
             var value = JSONData[propertyName]
             CSV += propertyName + "," + value + '\r\n';
-            CSV += row + '\r\n';
           });
             
             
