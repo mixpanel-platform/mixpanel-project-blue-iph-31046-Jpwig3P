@@ -73,7 +73,8 @@
             var dates = getDates();
             var params =  $.extend({}, dates, {
               'type': typeName,
-              'interval': getInterval(dates)
+              'interval': getInterval(dates),
+              'format': csv
             });
             
             MP.api.segment(eventName, propName, params).done(function(results){
@@ -100,8 +101,9 @@
               eventGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
               
+                    
             });
-          } 
+          }; 
         };
         
         eventSelect.on('change', function(e, eventName) {
