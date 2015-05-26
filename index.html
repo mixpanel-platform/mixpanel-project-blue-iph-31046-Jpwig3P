@@ -76,14 +76,14 @@
                 if (!output[properties]) {
                   output[properties] = {}
                 }
-                var property = level[properties]
+                var property = query[properties]
                 var sum = 0;
                 
                 _.each(_.keys(property), function(dates){
                   sum = sum + property[dates]
                 });
                   
-                output[properties][levels] = sum;
+                output[properties] = sum;
                   
               });
             
