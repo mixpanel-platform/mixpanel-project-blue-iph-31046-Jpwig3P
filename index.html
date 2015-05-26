@@ -43,6 +43,7 @@
           firstColHeader: 'Property',
           limit: 200
         });
+        var count = 0;
         
         
         //convenience method for grabbing that datepicker value
@@ -99,6 +100,7 @@
               
               eventGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
+              count += 1;
               runExport(output);
             });
           }; 
