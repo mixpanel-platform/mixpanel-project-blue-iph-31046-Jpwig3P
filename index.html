@@ -108,12 +108,11 @@
         
         function runExport(results) {
           $('#file').submit(function(e) {
-            var data = results;
-            if(data == '') {
+            if(results == '') {
               return;
             }
             fileName = $('#file input:first').val();
-            JSONToCSVConvertor(data, fileName);
+            JSONToCSVConvertor(results, fileName);
           });
         };
         
