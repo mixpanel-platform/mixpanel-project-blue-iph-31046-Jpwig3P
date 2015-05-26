@@ -43,8 +43,7 @@
           firstColHeader: 'Property',
           limit: 200
         });
-        var count = 0;
-        
+
         
         //convenience method for grabbing that datepicker value
         getDates = function() {
@@ -100,13 +99,21 @@
               
               eventGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
-              count += 1;
-              runExport(output);
+              
+              $('#file').submit(function(e) {
+                if(output == '') {
+                  return;
+                }
+                fileName = $('#file input:first').val();
+                JSONToCSVConvertor(output, fileName);
+              });
+              
+              //runExport(output);
             });
           }; 
         };
         
-        function runExport(results) {
+        /*function runExport(results) {
           $('#file').submit(function(e) {
             if(results == '') {
               return;
@@ -114,7 +121,7 @@
             fileName = $('#file input:first').val();
             JSONToCSVConvertor(results, fileName);
           });
-        };
+        };*/
         
         function JSONToCSVConvertor(JSONData, ReportTitle) {
           //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
