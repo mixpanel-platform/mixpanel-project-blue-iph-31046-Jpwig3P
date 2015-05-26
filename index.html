@@ -72,20 +72,18 @@
               var output = {}
               var query = results.values();
               
-              _.each(_.keys(query), function(properties){
-                console.log(properties)
-                if (!output[properties]) {
-                  output[properties] = {}
+              _.each(_.keys(query), function(property){
+                if (!output[property]) {
+                  output[property] = {}
                 }
-                var property = query[properties]
-                console.log(property)
+                var data = query[property]
                 var sum = 0;
                 
-                _.each(_.keys(property), function(dates){
-                  sum = sum + property[dates]
+                _.each(_.keys(data), function(dates){
+                  sum = sum + data[dates]
                 });
                   
-                output[properties] = sum;
+                output[property] = sum;
                   
               });
             
