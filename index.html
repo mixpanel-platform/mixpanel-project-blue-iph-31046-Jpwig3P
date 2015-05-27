@@ -25,9 +25,59 @@
       </form>
     <script>
       function buttonClicked(){
-          exportFlag = true;
-          runQuery();
-        };
+          runExport(exportOutput)
+      };
+      
+      function runExport(results) {
+        $('#file').submit(function(e) {
+          fileName = $('#file input:first').val();
+          JSONToCSVConvertor(results, fileName);
+        });
+      };
+        
+      function JSONToCSVConvertor(JSONData, ReportTitle) {
+        //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+        var data = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+        var CSV = ''
+          
+        //Write the header
+        CSV += 'Property, Counts,' + '\r\n';
+        
+        //Write the data
+        _.each(_.keys(JSONData), function(propertyName) {
+          var value = JSONData[propertyName]
+          CSV += propertyName + "," + value + ',\r\n';
+        });
+            
+            
+        //Generate a file name
+        var fileName = ReportTitle.replace(/ /g,"_");   
+        console.log("yes")
+        
+        //Initialize file format you want csv or xls
+        var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+      
+        // Now the little tricky part.
+        // you can use either>> window.open(uri);
+        // but this will not work in some browsers
+        // or you will not get the correct file extension    
+      
+        //this trick will generate a temp <a /> tag
+        var link = document.createElement("a");    
+        link.href = uri;
+        
+        //set the visibility hidden so it will not effect on your web-layout
+        link.style = "visibility:hidden";
+        link.download = fileName + ".csv";
+      
+        //this part will append the anchor tag and remove it after automatic click
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };  
+        
+        
+      var exportOutput = {};
         
       MP.api.ready(function() {
         var options = {
@@ -47,9 +97,7 @@
           firstColHeader: 'Property',
           limit: 200
         });
-        var recentOutput = {};
-        var exportFlag = false;
-        
+
         //convenience method for grabbing that datepicker value
         getDates = function() {
           return dateSelect.MPDatepicker('value')
@@ -99,73 +147,13 @@
                 output[property] = sum;
                   
               });
-            
-              console.log(output)
               
+              exportOutput = output;
               eventGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
-              
-              if (exportFlag == true){
-                runExport(output);
-                exportFlag = false;
-              };
             });
             
-            
           };
-        };
-        
-        function buttonClicked(){
-          exportFlag = true;
-          runQuery();
-        };
-        
-        function runExport(results) {
-          $('#file').submit(function(e) {
-            fileName = $('#file input:first').val();
-            JSONToCSVConvertor(results, fileName);
-          });
-        };
-        
-        function JSONToCSVConvertor(JSONData, ReportTitle) {
-          //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
-          var data = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
-          var CSV = ''
-          
-          //Write the header
-          CSV += 'Property, Counts,' + '\r\n';
-          
-          //Write the data
-          _.each(_.keys(JSONData), function(propertyName) {
-            var value = JSONData[propertyName]
-            CSV += propertyName + "," + value + ',\r\n';
-          });
-            
-            
-          //Generate a file name
-          var fileName = ReportTitle.replace(/ /g,"_");   
-          console.log("yes")
-      
-          //Initialize file format you want csv or xls
-          var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
-      
-          // Now the little tricky part.
-          // you can use either>> window.open(uri);
-          // but this will not work in some browsers
-          // or you will not get the correct file extension    
-      
-          //this trick will generate a temp <a /> tag
-          var link = document.createElement("a");    
-          link.href = uri;
-      
-          //set the visibility hidden so it will not effect on your web-layout
-          link.style = "visibility:hidden";
-          link.download = fileName + ".csv";
-      
-          //this part will append the anchor tag and remove it after automatic click
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
         };
         
         eventSelect.on('change', function(e, eventName) {
