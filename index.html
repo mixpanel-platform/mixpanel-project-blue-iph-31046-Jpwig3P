@@ -21,7 +21,7 @@
       </div>
       <form id="file" style="margin-bottom: 15px; height: 31px">  
         <input type="text" autofocus placeholder="Filename" name="filename" value="" style="color: rgb(95,105,131); height: 30px; width: 500px; padding: 0 4px; font-size: 12px; border: 1px solid rgb(201,209,219)">
-        <input type="submit" name="export" value="Export" style="font-weight: bold; color: rgb(95,105,131); font-size: 12px; height: 31px; padding: 0 10px; margin-left: 10px; border: 1px solid rgb(201,209,219); background-color: rgb(242,244,246)">
+        <input type="submit" name="export" value="Export" onclick = "buttonClicked()" style="font-weight: bold; color: rgb(95,105,131); font-size: 12px; height: 31px; padding: 0 10px; margin-left: 10px; border: 1px solid rgb(201,209,219); background-color: rgb(242,244,246)">
       </form>
     <script>
       MP.api.ready(function() {
@@ -43,6 +43,7 @@
           limit: 200
         });
         var recentOutput = {};
+        var exportFlag = false;
         
         //convenience method for grabbing that datepicker value
         getDates = function() {
@@ -98,18 +99,24 @@
               
               eventGraph.MPChart('setData', output);  
               eventTable.MPTable('setData', output);
-              runExport(output)
+              
+              if (exportFlag == true){
+                runExport(output);
+                exportFlag = false;
+              };
             });
             
             
           };
         };
         
+        function buttonClicked(){
+          exportFlag = true;
+          runQuery();
+        }
+        
         function runExport(results) {
           $('#file').submit(function(e) {
-            if(results == '') {
-              return;
-            }
             fileName = $('#file input:first').val();
             JSONToCSVConvertor(results, fileName);
           });
