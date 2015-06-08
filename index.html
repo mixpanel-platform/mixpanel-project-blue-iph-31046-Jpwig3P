@@ -127,6 +127,7 @@
             var params =  $.extend({}, dates, {
               'type': typeName,
               'interval': getInterval(dates),
+              'where': '(number(properties["ItemID"]) >= 2000 and number(properties["ItemID"]) <= 2500) and (string(properties["IsPremium"]) == "Yes")'
             });
             
             MP.api.segment(eventName, propName, params).done(function(results){
