@@ -13,10 +13,10 @@
       <div id="dateSelect" style="float: right;"></div><br/><br/><br/>
       <div id="mpselect" style="float: left;"></div><br/><br/><br/>
       <div class="instructions">
-        <p style="font-size: 13px; color: rgb(95,105,131)">You may enter the property selector for an Event. For example: ("San Francisco" in properties["$city"]) </p>
+        <p style="font-size: 13px; color: rgb(95,105,131)">You may enter the property selector for Event A. For example: ("San Francisco" in properties["$city"]) </p>
       </div>
       <form id="property" style="margin-bottom: 15px; height: 31px">
-        <input type="text" autofocus placeholder="Property Selector for Event" name="property-name-field" value="" style="color: rgb(95,105,131); height: 30px; width: 500px; padding: 0 4px; font-size: 12px; border: 1px solid rgb(201,209,219)">
+        <input type="text" autofocus placeholder="Property Selector for Event A" name="property-name-field" value="" style="color: rgb(95,105,131); height: 30px; width: 500px; padding: 0 4px; font-size: 12px; border: 1px solid rgb(201,209,219)">
         <input type="submit" name="submit" value="Submit" style="font-weight: bold; color: rgb(95,105,131); font-size: 12px; height: 31px; padding: 0 10px; margin-left: 10px; border: 1px solid rgb(201,209,219); background-color: rgb(242,244,246)">
       </form>
       <div class="confirmation">
@@ -27,7 +27,7 @@
       <div id="graph"></div>
     </div>
     <div id="table"></div>
-    <div class="instructions2">
+    <div class="instructions">
         <p style="font-size: 13px; color: rgb(95,105,131)">Please enter desired filename without extention. **Note: Check before export**</p>
       </div>
       <form id="file" style="margin-bottom: 15px; height: 31px">  
@@ -109,11 +109,12 @@
           limit: 200
         });
         var propValue = '';
+        
         $('#property').submit(function(e) {
           e.preventDefault();
           propValue = $('#property input:first').val();
           $('.confirm-text').html(
-              "Property Selector for Event A: <strong>" + propValue + 
+              "Property Selector for Event: <strong>" + propValue + 
               "</strong><br>")
             .css("color", "rgb(95,105,131)");
           runQuery();
